@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LessonDao implements ILessonDao {
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_SUBJECT = "subject";
+    public static final String COLUMN_TEACHER = "teacher";
+    public static final String COLUMN_STUDENT = "student";
+    public static final String COLUMN_MARK = "mark";
+    public static final String COLUMN_ATTENDANCE = "attendance";
     private ConnectionManager conManager = ConnectionManagerJDBCImpl.getInstance();
 
     @Override
@@ -28,7 +34,7 @@ public class LessonDao implements ILessonDao {
         statement.setInt(1, lesson.getSubjectId());
         statement.setInt(2, lesson.getStudentId());
         statement.setInt(3, lesson.getTeacherId());
-        statement.setInt(4, lesson.getMarkId());
+        statement.setInt(4, lesson.getMark());
         statement.setBoolean(5, lesson.isAttendance());
 
         boolean execute = statement.execute();
@@ -58,12 +64,12 @@ public class LessonDao implements ILessonDao {
         ResultSet set = statement.executeQuery();
         if (set.next()) {
             return new Lesson(
-                    set.getInt("id"),
-                    set.getInt("subject"),
-                    set.getInt("student"),
-                    set.getInt("teacher"),
-                    set.getInt("mark"),
-                    set.getBoolean("attendance")
+                    set.getInt(COLUMN_ID),
+                    set.getInt(COLUMN_SUBJECT),
+                    set.getInt(COLUMN_STUDENT),
+                    set.getInt(COLUMN_TEACHER),
+                    set.getInt(COLUMN_MARK),
+                    set.getBoolean(COLUMN_ATTENDANCE)
             );
         }
 
@@ -85,7 +91,7 @@ public class LessonDao implements ILessonDao {
         statement.setInt(1, lesson.getSubjectId());
         statement.setInt(2, lesson.getStudentId());
         statement.setInt(3, lesson.getTeacherId());
-        statement.setInt(4, lesson.getMarkId());
+        statement.setInt(4, lesson.getMark());
         statement.setBoolean(5, lesson.isAttendance());
         statement.setInt(6, lesson.getId());
 
@@ -122,43 +128,35 @@ public class LessonDao implements ILessonDao {
         connection = conManager.getConnection();
         PreparedStatement statement = null;
         statement = connection.prepareStatement("select\n" +
-                "  lesson.*,\n" +
-                "  s2.subject_name,\n" +
-                "  s3.student_name,\n" +
-                "  s3.course,\n" +
-                "  t2.teacher_name,\n" +
-                "  m2.value,\n" +
-                "  m2.system\n" +
-                "\n" +
+                "  lesson.*\n" +
                 "from lesson\n" +
                 "  inner join subjects s2 on lesson.subject = s2.id\n" +
-                "  inner join students s3 on lesson.student = s3.id\n" +
-                "  inner join teachers t2 on lesson.teacher = t2.id\n" +
-                "  inner join marks m2 on lesson.mark = m2.id\n" +
+                "  inner join users s3 on lesson.student = s3.id\n" +
+                "  inner join users t2 on lesson.teacher = t2.id\n" +
                 "where lesson.student = ?");
         statement.setInt(1, id);
 
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
-            Subject subject = new Subject(resultSet.getInt("subject"),
-                    resultSet.getString("subject_name"));
-            Student student = new Student(resultSet.getInt(resultSet.getInt("student")),
-                    resultSet.getString("student_name"),
-                    resultSet.getInt("course"));
-            Teacher teacher = new Teacher(resultSet.getInt("teacher"),
-                    resultSet.getString("teacher_name"));
-            Mark mark = new Mark(resultSet.getInt("mark"),
-                    resultSet.getInt("value"),
-                    resultSet.getString("system"));
-            lessons.add(new Lesson(resultSet.getInt("id"),
+            int idLesson = resultSet.getInt(COLUMN_ID);
+            int idStudent = resultSet.getInt(COLUMN_STUDENT);
+            int idTeacher = resultSet.getInt(COLUMN_TEACHER);
+            int idSubject = resultSet.getInt(COLUMN_SUBJECT);
+            int mark = resultSet.getInt(COLUMN_MARK);
+            boolean attendance = resultSet.getBoolean(COLUMN_ATTENDANCE);
+
+            UserDao userDao = new UserDao();
+            User student = userDao.getUserById(idStudent);
+            User teacher = userDao.getUserById(idTeacher);
+            Subject subject = new SubjectDao().getSubjectById(idSubject);
+
+            lessons.add(new Lesson(idLesson,
                     subject, subject.getId(),
                     student, student.getId(),
                     teacher, teacher.getId(),
-                    mark, mark.getId(),
-                    resultSet.getBoolean("attendance")
-            ));
+                    mark,
+                    attendance));
         }
-
         return lessons;
     }
 }

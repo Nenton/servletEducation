@@ -5,17 +5,16 @@ public class Lesson {
 
     private Subject subject;
     private int subjectId;
-    private Student student;
+    private User student;
     private int studentId;
-    private Teacher teacher;
+    private User teacher;
     private int teacherId;
-    private Mark mark;
-    private int markId;
+    private int mark;
 
     private boolean attendance;
 
-    public Lesson(int id, Subject subject, int subjectId, Student student, int studentId,
-                  Teacher teacher, int teacherId, Mark mark, int markId, boolean attendance) {
+    public Lesson(int id, Subject subject, int subjectId, User student, int studentId,
+                  User teacher, int teacherId, int mark, boolean attendance) {
         this.id = id;
         this.subject = subject;
         this.subjectId = subjectId;
@@ -24,16 +23,15 @@ public class Lesson {
         this.teacher = teacher;
         this.teacherId = teacherId;
         this.mark = mark;
-        this.markId = markId;
         this.attendance = attendance;
     }
 
-    public Lesson(int id, int subjectId, int studentId, int teacherId, int markId, boolean attendance) {
+    public Lesson(int id, int subjectId, int studentId, int teacherId, int mark, boolean attendance) {
         this.id = id;
         this.subjectId = subjectId;
         this.studentId = studentId;
         this.teacherId = teacherId;
-        this.markId = markId;
+        this.mark = mark;
         this.attendance = attendance;
     }
 
@@ -49,7 +47,7 @@ public class Lesson {
         return subjectId;
     }
 
-    public Student getStudent() {
+    public User getStudent() {
         return student;
     }
 
@@ -57,7 +55,7 @@ public class Lesson {
         return studentId;
     }
 
-    public Teacher getTeacher() {
+    public User getTeacher() {
         return teacher;
     }
 
@@ -65,12 +63,8 @@ public class Lesson {
         return teacherId;
     }
 
-    public Mark getMark() {
+    public int getMark() {
         return mark;
-    }
-
-    public int getMarkId() {
-        return markId;
     }
 
     public boolean isAttendance() {

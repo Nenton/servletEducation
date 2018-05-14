@@ -3,6 +3,7 @@ package ru.innopolis.stc9.susev.servlets;
 import ru.innopolis.stc9.susev.pojo.Lesson;
 import ru.innopolis.stc9.susev.services.LessonService;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,12 +23,16 @@ public class HelloServlet extends HttpServlet {
                 String lessonString = "Lesson ID:" + lesson.getId() + ", " +
                         "subject:" + lesson.getSubject().getName() + ", " +
                         "student name:" + lesson.getStudent().getFullName() + ", " +
-                        "student course:" + lesson.getStudent().getCourse() + ", " +
                         "teacher name:" + lesson.getTeacher().getFullName() + ", " +
-                        "mark:" + lesson.getMark().getValue() + ", " +
+                        "mark:" + lesson.getMark() + ", " +
                         "attendance:" + lesson.isAttendance();
                 resp.getWriter().println(lessonString);
             }
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }

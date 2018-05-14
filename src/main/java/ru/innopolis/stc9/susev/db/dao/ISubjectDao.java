@@ -3,13 +3,15 @@ package ru.innopolis.stc9.susev.db.dao;
 import com.sun.istack.internal.Nullable;
 import ru.innopolis.stc9.susev.pojo.Subject;
 
-public interface ISubjectDao {
-    boolean addSubject(Subject manufacturer);
+import java.sql.SQLException;
 
-    boolean deleteSubject(Subject manufacturer);
+public interface ISubjectDao {
+    boolean addSubject(Subject subject) throws SQLException;
+
+    boolean deleteSubject(Subject subject) throws SQLException;
 
     @Nullable
-    Subject getSubjectById(int id);
+    Subject getSubjectById(int id) throws SQLException;
 
-    boolean updateSubject(Subject manufacturer);
+    boolean updateSubject(Subject subject) throws SQLException;
 }
