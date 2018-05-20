@@ -12,7 +12,7 @@ public interface IUserDao {
     User getUserByLogin(String login) throws SQLException;
 
     @Nullable
-    User getUserById(int idUser) throws SQLException;
+    User getUserById(String idUser) throws SQLException;
 
     boolean addUser(User user) throws SQLException;
 
@@ -22,7 +22,7 @@ public interface IUserDao {
 
     Role getRoleByLogin(String login) throws SQLException;
 
-    List<User> getStudents() throws SQLException;
+    boolean deleteUserById(int idUser) throws SQLException;
 
-    List<User> getTeachers() throws SQLException;
+    List<User> getUsers(int roleId) throws SQLException;
 }

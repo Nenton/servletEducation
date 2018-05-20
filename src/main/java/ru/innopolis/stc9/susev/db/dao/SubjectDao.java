@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SubjectDao implements ISubjectDao {
     public static final String COLUMN_ID = "id";
@@ -58,6 +60,19 @@ public class SubjectDao implements ISubjectDao {
         }
         connection.close();
         return subject;
+    }
+
+    public List<Subject> getSubjects() throws SQLException {
+        List<Subject> subjects = new ArrayList<>();
+        Connection connection = ConnectionManagerJDBCImpl.getInstance().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM subjects");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            subjects.add(new Subject(resultSet.getInt(COLUMN_ID),
+                    resultSet.getString(COLUMN_SUBJECT_NAME)));
+        }
+        connection.close();
+        return subjects;
     }
 
     @Override

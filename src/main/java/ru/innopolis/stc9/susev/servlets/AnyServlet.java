@@ -1,5 +1,6 @@
 package ru.innopolis.stc9.susev.servlets;
 
+import ru.innopolis.stc9.susev.pojo.User;
 import ru.innopolis.stc9.susev.services.UsersService;
 
 import javax.servlet.ServletException;
@@ -9,17 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/students")
-public class StudentsServlet extends HttpServlet {
+@WebServlet("/users/*")
+public class AnyServlet extends HttpServlet {
     private UsersService service = new UsersService();
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("students", service.getStudents());
-        req.getRequestDispatcher("/pages/students.jsp").forward(req, resp);
-    }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().println("any");
+        try {
+            int idUser = Integer.parseInt(req.getPathInfo().substring(1));
+            User userById = service.getUserById(String.valueOf(idUser));
+            req.setAttribute("user", userById);
+            req.getRequestDispatcher("../pages/user.jsp");
+        } catch (NumberFormatException e) {
+
+        }
     }
 }

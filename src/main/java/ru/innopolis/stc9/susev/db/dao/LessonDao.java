@@ -44,14 +44,7 @@ public class LessonDao implements ILessonDao {
 
     @Override
     public boolean deleteLesson(Lesson lesson) throws SQLException {
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("delete from lesson where id = ?");
-        statement.setInt(1, lesson.getId());
-        boolean execute = statement.execute();
-        connection.close();
-        return execute;
+        return deleteLessonById(lesson.getId());
     }
 
     @Override
@@ -110,33 +103,62 @@ public class LessonDao implements ILessonDao {
     }
 
     @Nullable
-    public List<Lesson> getLessonsByTeacher(int id) throws SQLException {
+    public List<Lesson> getLessonsByTeacher(int id, int count) throws SQLException {
         if (id == 0) {
             return null;
         }
-        List<Lesson> lessons = new ArrayList<>();
-        return lessons;
-    }
-
-    @Nullable
-    public List<Lesson> getLessonsByStudent(int id) throws SQLException {
-        if (id == 0) {
-            return null;
-        }
-        List<Lesson> lessons = new ArrayList<>();
         Connection connection;
         connection = conManager.getConnection();
         PreparedStatement statement = null;
         statement = connection.prepareStatement("select\n" +
                 "  lesson.*\n" +
                 "from lesson\n" +
-                "  inner join subjects s2 on lesson.subject = s2.id\n" +
-                "  inner join users s3 on lesson.student = s3.id\n" +
-                "  inner join users t2 on lesson.teacher = t2.id\n" +
-                "where lesson.student = ?");
+                "where lesson.teacher = ?\n" +
+                "order by lesson.id desc limit ?");
         statement.setInt(1, id);
+        statement.setInt(2, count);
 
         ResultSet resultSet = statement.executeQuery();
+        return parseResultSet(resultSet);
+    }
+
+    @Nullable
+    public List<Lesson> getLessonsByStudent(int id, int count) throws SQLException {
+        if (id == 0) {
+            return null;
+        }
+        Connection connection;
+        connection = conManager.getConnection();
+        PreparedStatement statement = null;
+        statement = connection.prepareStatement("select\n" +
+                "  lesson.*\n" +
+                "from lesson\n" +
+                "where lesson.student = ?\n" +
+                "order by lesson.id desc limit ?");
+        statement.setInt(1, id);
+        statement.setInt(2, count);
+
+        ResultSet resultSet = statement.executeQuery();
+        return parseResultSet(resultSet);
+    }
+
+    public List<Lesson> getLessons(int count) throws SQLException {
+        if (count == 0) {
+            return null;
+        }
+        Connection connection;
+        connection = conManager.getConnection();
+        PreparedStatement statement = null;
+        statement = connection.prepareStatement("select * from lesson order by lesson.id desc limit ?;");
+        statement.setInt(1, count);
+
+        ResultSet resultSet = statement.executeQuery();
+        connection.close();
+        return parseResultSet(resultSet);
+    }
+
+    private List<Lesson> parseResultSet(ResultSet resultSet) throws SQLException {
+        List<Lesson> lessons = new ArrayList<>();
         while (resultSet.next()) {
             int idLesson = resultSet.getInt(COLUMN_ID);
             int idStudent = resultSet.getInt(COLUMN_STUDENT);
@@ -146,8 +168,8 @@ public class LessonDao implements ILessonDao {
             boolean attendance = resultSet.getBoolean(COLUMN_ATTENDANCE);
 
             UserDao userDao = new UserDao();
-            User student = userDao.getUserById(idStudent);
-            User teacher = userDao.getUserById(idTeacher);
+            User student = userDao.getUserById(String.valueOf(idStudent));
+            User teacher = userDao.getUserById(String.valueOf(idTeacher));
             Subject subject = new SubjectDao().getSubjectById(idSubject);
 
             lessons.add(new Lesson(idLesson,
@@ -158,5 +180,16 @@ public class LessonDao implements ILessonDao {
                     attendance));
         }
         return lessons;
+    }
+
+    public boolean deleteLessonById(int idLesson) throws SQLException {
+        Connection connection;
+        connection = conManager.getConnection();
+        PreparedStatement statement = null;
+        statement = connection.prepareStatement("delete from lesson where id = ?");
+        statement.setInt(1, idLesson);
+        boolean execute = statement.execute();
+        connection.close();
+        return execute;
     }
 }

@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <%@include file="../containers/head.jsp" %>
@@ -13,12 +12,7 @@
 
         <div class="container">
             <main class="content">
-                <c:forEach var="student" items="${students}">
-                    ${student.id}
-                    ${student.login}
-                    <a href="/students?student=${student.fullName}"> ${student.fullName}</a>
-                    ${student.role.role}<br>
-                </c:forEach>
+                <%@include file="../containers/tableRoles.jsp" %>
             </main><!-- .content -->
         </div><!-- .container-->
 

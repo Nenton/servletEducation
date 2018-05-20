@@ -12,8 +12,8 @@
 
         <div class="container">
             <main class="content">
-                teachers
-            </main><!-- .content -->
+                <strong>Content:</strong> Страница с информацией
+            </main>
         </div><!-- .container-->
 
         <%@include file="../containers/sidebar.jsp" %>

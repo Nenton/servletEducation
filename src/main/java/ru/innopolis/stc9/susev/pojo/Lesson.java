@@ -35,6 +35,14 @@ public class Lesson {
         this.attendance = attendance;
     }
 
+    public Lesson(int subjectId, int studentId, int teacherId, int mark, boolean attendance) {
+        this.subjectId = subjectId;
+        this.studentId = studentId;
+        this.teacherId = teacherId;
+        this.mark = mark;
+        this.attendance = attendance;
+    }
+
     public int getId() {
         return id;
     }

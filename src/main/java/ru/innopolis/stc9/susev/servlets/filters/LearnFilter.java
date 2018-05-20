@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/users", "/roles"})
-public class AdminFilter implements Filter {
-
+@WebFilter(urlPatterns = {"/lessons"})
+public class LearnFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -22,7 +21,7 @@ public class AdminFilter implements Filter {
         HttpSession httpSession = ((HttpServletRequest) request).getSession();
         Role role = (Role) httpSession.getAttribute("role");
         Object login = httpSession.getAttribute("login");
-        if (login != null && role != null && role.getRole().equals("admin")) {
+        if (login != null && role != null && (role.getId() == 3 || role.getId() == 4 || role.getId() == 1)) {
             chain.doFilter(request, response);
         } else {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;

@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoleDao implements IRoleDao {
     public static final String COLUMN_ID = "id";
@@ -23,9 +25,8 @@ public class RoleDao implements IRoleDao {
         Connection connection;
         connection = conManager.getConnection();
         PreparedStatement statement = null;
-        statement = connection.prepareStatement("insert into role(id, role) values (?, ?)");
-        statement.setInt(1, role.getId());
-        statement.setString(2, role.getRole());
+        statement = connection.prepareStatement("insert into role(role) values (?)");
+        statement.setString(1, role.getRole());
 
         boolean execute = statement.execute();
         connection.close();
@@ -34,11 +35,16 @@ public class RoleDao implements IRoleDao {
 
     @Override
     public boolean deleteRole(Role role) throws SQLException {
+        return deleteRole(role.getId());
+    }
+
+    @Override
+    public boolean deleteRole(int id) throws SQLException {
         Connection connection;
         connection = conManager.getConnection();
         PreparedStatement statement = null;
         statement = connection.prepareStatement("delete from role where id = ?");
-        statement.setInt(1, role.getId());
+        statement.setInt(1, id);
         boolean execute = statement.execute();
         connection.close();
         return execute;
@@ -80,5 +86,22 @@ public class RoleDao implements IRoleDao {
         statement.executeUpdate();
         connection.close();
         return true;
+    }
+
+    @Override
+    public List<Role> getRoles() throws SQLException {
+        List<Role> roles = new ArrayList<>();
+        Connection connection;
+        connection = conManager.getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from role");
+        ResultSet set = statement.executeQuery();
+        while (set.next()) {
+            roles.add(new Role(
+                    set.getInt(COLUMN_ID),
+                    set.getString(COLUMN_ROLE)
+            ));
+        }
+        connection.close();
+        return roles;
     }
 }

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <%@include file="../containers/head.jsp" %>
@@ -12,7 +13,7 @@
 
         <div class="container">
             <main class="content">
-                <strong>Content:</strong> Admin
+                <%@include file="../containers/tableUser.jsp"%>
             </main><!-- .content -->
         </div><!-- .container-->
 

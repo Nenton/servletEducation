@@ -12,7 +12,7 @@
 
         <div class="container">
             <main class="content">
-            <a href="${pageContext.request.contextPath}/login">Войти</a>
+                <strong>Content:</strong> Вступительная страница. Расказывает что за сайт и зачем он нужен.
             </main>
         </div><!-- .container-->
 

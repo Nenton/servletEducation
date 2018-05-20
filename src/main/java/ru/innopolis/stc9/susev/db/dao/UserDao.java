@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao implements IUserDao {
@@ -44,11 +45,11 @@ public class UserDao implements IUserDao {
 
     @Nullable
     @Override
-    public User getUserById(int id) throws SQLException {
+    public User getUserById(String id) throws SQLException {
         User result = null;
         Connection connection = ConnectionManagerJDBCImpl.getInstance().getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id=?");
-        preparedStatement.setInt(1, id);
+        preparedStatement.setInt(1, Integer.parseInt(id));
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
             Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
@@ -70,13 +71,12 @@ public class UserDao implements IUserDao {
         Connection connection;
         connection = conManager.getConnection();
         PreparedStatement statement = null;
-        statement = connection.prepareStatement("insert into users(id, login, password, role, fullName) " +
-                "values (?, ?, ?, ?, ?)");
-        statement.setInt(1, user.getId());
-        statement.setString(2, user.getLogin());
-        statement.setString(3, user.getPasswordHash());
-        statement.setInt(4, user.getRole().getId());
-        statement.setString(5, user.getFullName());
+        statement = connection.prepareStatement("insert into users(login, password, role, fullName) " +
+                "values (?, ?, ?, ?)");
+        statement.setString(1, user.getLogin());
+        statement.setString(2, user.getPasswordHash());
+        statement.setInt(3, user.getRole().getId());
+        statement.setString(4, user.getFullName());
 
         boolean execute = statement.execute();
         connection.close();
@@ -138,12 +138,50 @@ public class UserDao implements IUserDao {
     }
 
     @Override
-    public List<User> getStudents() throws SQLException {
-        return null;
+    public boolean deleteUserById(int idUser) throws SQLException {
+        Connection connection;
+        connection = conManager.getConnection();
+        PreparedStatement statement = null;
+        statement = connection.prepareStatement("delete from users where id = ?");
+        statement.setInt(1, idUser);
+        boolean execute = statement.execute();
+        connection.close();
+        return execute;
     }
 
     @Override
-    public List<User> getTeachers() throws SQLException {
-        return null;
+    public List<User> getUsers(int roleId) throws SQLException {
+        List<User> result = new ArrayList<>();
+        Connection connection = ConnectionManagerJDBCImpl.getInstance().getConnection();
+        String sql = "select * from users where users.role = " + roleId + ";";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
+            result.add(new User(resultSet.getInt(COLUMN_ID),
+                    resultSet.getString(COLUMN_LOGIN),
+                    resultSet.getString(COLUMN_PASSWORD),
+                    role,
+                    resultSet.getString(COLUMN_FULL_NAME)));
+        }
+        connection.close();
+        return result;
+    }
+
+    public List<User> getUsers() throws SQLException {
+        List<User> result = new ArrayList<>();
+        Connection connection = ConnectionManagerJDBCImpl.getInstance().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users;");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
+            result.add(new User(resultSet.getInt(COLUMN_ID),
+                    resultSet.getString(COLUMN_LOGIN),
+                    resultSet.getString(COLUMN_PASSWORD),
+                    role,
+                    resultSet.getString(COLUMN_FULL_NAME)));
+        }
+        connection.close();
+        return result;
     }
 }
