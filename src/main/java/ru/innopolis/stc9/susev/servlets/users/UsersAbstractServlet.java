@@ -2,6 +2,7 @@ package ru.innopolis.stc9.susev.servlets.users;
 
 import ru.innopolis.stc9.susev.pojo.Role;
 import ru.innopolis.stc9.susev.pojo.User;
+import ru.innopolis.stc9.susev.services.IUsersService;
 import ru.innopolis.stc9.susev.services.UsersService;
 import ru.innopolis.stc9.susev.servlets.IUserServlet;
 
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class UsersAbstractServlet extends HttpServlet implements IUserServlet {
-    private UsersService service = new UsersService();
+    private IUsersService service = new UsersService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

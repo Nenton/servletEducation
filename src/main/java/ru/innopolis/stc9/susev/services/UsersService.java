@@ -9,80 +9,84 @@ import ru.innopolis.stc9.susev.pojo.Role;
 import ru.innopolis.stc9.susev.pojo.User;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class UsersService {
+public class UsersService implements IUsersService {
     private IUserDao userDao = new UserDao();
     private IRoleDao roleDao = new RoleDao();
 
+    @Override
     @Nullable
     public User getUserById(int id) {
-        User user = null;
         try {
-            user = userDao.getUserById(id);
+            return userDao.getUserById(id);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка получения пользователя по id - " + id, e);
+            return null;
         }
-        return user;
     }
 
+    @Override
     @Nullable
     public User getUserByLogin(String login) {
-        User user = null;
         try {
-            user = userDao.getUserByLogin(login);
+            return userDao.getUserByLogin(login);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка получения пользователя по login - " + login, e);
+            return null;
         }
-        return user;
     }
 
+    @Override
     public boolean deleteUserById(int idUser) {
         try {
             return userDao.deleteUserById(idUser);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка удаления пользователя по id - " + idUser, e);
+            return false;
         }
-        return false;
     }
 
+    @Override
     public boolean createUser(User user) {
         try {
             return userDao.addUser(user);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка создания пользователя", e);
+            return false;
         }
-        return false;
     }
 
+    @Override
+    @Nullable
     public List<User> getUsers() {
-        List<User> users = null;
         try {
-            users = userDao.getUsers();
+            return userDao.getUsers();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка получения пользователей", e);
+            return null;
         }
-        return users;
     }
 
+    @Override
+    @Nullable
     public List<User> getUsers(int roleId) {
-        List<User> users = null;
         try {
-            users = userDao.getUsers(roleId);
+            return userDao.getUsers(roleId);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка получения пользователей по id role - " + roleId, e);
+            return null;
         }
-        return users;
     }
 
+    @Override
+    @Nullable
     public List<Role> getRoles() {
-        List<Role> roles = null;
         try {
-            roles = roleDao.getRoles();
+            return roleDao.getRoles();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Ошибка получения ролей", e);
+            return null;
         }
-        return roles;
     }
 }

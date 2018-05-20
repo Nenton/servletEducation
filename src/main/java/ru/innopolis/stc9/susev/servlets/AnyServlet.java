@@ -1,6 +1,7 @@
 package ru.innopolis.stc9.susev.servlets;
 
 import ru.innopolis.stc9.susev.pojo.User;
+import ru.innopolis.stc9.susev.services.IUsersService;
 import ru.innopolis.stc9.susev.services.UsersService;
 
 import javax.servlet.ServletException;
@@ -12,7 +13,7 @@ import java.io.IOException;
 
 @WebServlet("/users/*")
 public class AnyServlet extends HttpServlet {
-    private UsersService service = new UsersService();
+    private IUsersService service = new UsersService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
