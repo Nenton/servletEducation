@@ -9,13 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Filter for users. Access is granted only users for education
+ */
 @WebFilter(urlPatterns = {"/lessons"})
-public class LearnFilter implements Filter {
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
+public class LearnFilter extends AbstractFilter{
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession httpSession = ((HttpServletRequest) request).getSession();
@@ -28,10 +26,5 @@ public class LearnFilter implements Filter {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login?errorMsg=noAccess");
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

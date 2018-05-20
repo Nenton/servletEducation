@@ -4,7 +4,6 @@ import ru.innopolis.stc9.susev.pojo.Role;
 import ru.innopolis.stc9.susev.pojo.User;
 import ru.innopolis.stc9.susev.services.IUsersService;
 import ru.innopolis.stc9.susev.services.UsersService;
-import ru.innopolis.stc9.susev.servlets.IUserServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class UsersAbstractServlet extends HttpServlet implements IUserServlet {
+/**
+ * Class for pages different roles
+ */
+public abstract class UsersAbstractController extends HttpServlet implements IUserController {
     private IUsersService service = new UsersService();
 
     @Override
@@ -21,6 +23,7 @@ public abstract class UsersAbstractServlet extends HttpServlet implements IUserS
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         List<User> users = null;
+
         int roleId = getRoleCreate();
         if (roleId == 0) {
             users = service.getUsers();

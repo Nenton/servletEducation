@@ -2,16 +2,15 @@ package ru.innopolis.stc9.susev.servlets.users;
 
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet("/users")
-public class UsersServlet extends UsersAbstractServlet {
-
+@WebServlet("/teachers")
+public class TeachersController extends UsersAbstractController {
     @Override
     public int getRoleCreate() {
-        return 0;
+        return 4;
     }
 
     @Override
     public String getPathPage() {
-        return "/users";
+        return "/teachers";
     }
 }

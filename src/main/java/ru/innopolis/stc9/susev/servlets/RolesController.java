@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller for show roles
+ */
 @WebServlet("/roles")
-public class RolesServlet extends HttpServlet {
+public class RolesController extends HttpServlet {
     private IRoleService service = new RoleService();
 
     @Override

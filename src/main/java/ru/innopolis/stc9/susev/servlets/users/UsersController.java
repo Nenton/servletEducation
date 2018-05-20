@@ -1,16 +1,20 @@
 package ru.innopolis.stc9.susev.servlets.users;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet("/teachers")
-public class TeachersServlet extends UsersAbstractServlet {
+@WebServlet("/users")
+public class UsersController extends UsersAbstractController {
+
     @Override
     public int getRoleCreate() {
-        return 4;
+        return 0;
     }
 
     @Override
+    @NotNull
     public String getPathPage() {
-        return "/teachers";
+        return "/users";
     }
 }

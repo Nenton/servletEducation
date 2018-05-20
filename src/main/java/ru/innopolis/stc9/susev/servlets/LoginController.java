@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Controller for login operations
+ */
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
 
@@ -22,11 +25,11 @@ public class LoginController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String errorMsg = req.getParameter("errorMsg");
-        if (errorMsg != null && errorMsg.equals("noAccess")){
+        if (errorMsg != null && errorMsg.equals("noAccess")) {
 
         }
 
-        if (errorMsg != null && errorMsg.equals("authErr")){
+        if (errorMsg != null && errorMsg.equals("authErr")) {
             req.setAttribute("errorMsg", "String");
         }
         req.getRequestDispatcher("/pages/login.jsp").forward(req, resp);

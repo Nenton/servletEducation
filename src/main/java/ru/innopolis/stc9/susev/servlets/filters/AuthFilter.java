@@ -9,13 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Filter for users. Access is granted only registered users
+ */
 @WebFilter(urlPatterns = {"/teachers", "/students", "/lessons", "/users", "/roles"})
-public class AuthFilter implements Filter {
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
-
+public class AuthFilter extends AbstractFilter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession httpSession = ((HttpServletRequest) request).getSession();
@@ -39,10 +37,5 @@ public class AuthFilter implements Filter {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login?errorMsg=noAccess");
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

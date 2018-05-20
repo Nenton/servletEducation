@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller for all need compressed information for user
+ */
 @WebServlet(urlPatterns = {"/dashboard"})
-public class DashboardServlet extends HttpServlet {
+public class DashboardController extends HttpServlet {
     private ILessonService service = new LessonService();
 
     @Override

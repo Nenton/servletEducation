@@ -18,8 +18,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+/**
+ * Controller for show lessons for student or teacher
+ */
 @WebServlet(urlPatterns = {"/lessons"})
-public class LessonsServlet extends HttpServlet {
+public class LessonsController extends HttpServlet {
     private ILessonService service = new LessonService();
 
     @Override
@@ -49,7 +52,7 @@ public class LessonsServlet extends HttpServlet {
         List<User> teachers = service.getTeachers();
         List<User> students = service.getStudents();
         List<Subject> subjects = service.getSubjects();
-
+// TODO: 20.05.2018 mapping
         req.setAttribute("marks", marks);
         req.setAttribute("subjects", subjects);
         req.setAttribute("students", students);

@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Class NOT REALIZED. For current user
+ */
 @WebServlet("/users/*")
-public class AnyServlet extends HttpServlet {
+public class UserController extends HttpServlet {
     private IUsersService service = new UsersService();
 
     @Override
