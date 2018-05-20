@@ -1,5 +1,6 @@
 package ru.innopolis.stc9.susev.services;
 
+import ru.innopolis.stc9.susev.db.dao.ILessonDao;
 import ru.innopolis.stc9.susev.db.dao.LessonDao;
 import ru.innopolis.stc9.susev.db.dao.SubjectDao;
 import ru.innopolis.stc9.susev.db.dao.UserDao;
@@ -11,9 +12,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class LessonService {
-    LessonDao lessonDao = new LessonDao();
-    SubjectDao subjectDao = new SubjectDao();
-    UserDao userDao = new UserDao();
+    private ILessonDao lessonDao = new LessonDao();
+    private SubjectDao subjectDao = new SubjectDao();
+    private UserDao userDao = new UserDao();
 
     public User getUserByLogin(String login) {
         try {
@@ -51,9 +52,9 @@ public class LessonService {
         return null;
     }
 
-    public List<Lesson> getLessonsBySubject(int id) {
+    public List<Lesson> getLessonsBySubject(int id, int count) {
         try {
-            return lessonDao.getLessonsBySubject(id);
+            return lessonDao.getLessonsBySubject(id, count);
         } catch (SQLException e) {
             e.printStackTrace();
         }

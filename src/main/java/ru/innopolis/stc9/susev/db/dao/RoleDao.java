@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleDao implements IRoleDao {
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_ROLE = "role";
 
     private ConnectionManager conManager = ConnectionManagerJDBCImpl.getInstance();
 
@@ -22,15 +20,12 @@ public class RoleDao implements IRoleDao {
         if (role == null) {
             return false;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("insert into role(role) values (?)");
-        statement.setString(1, role.getRole());
-
-        boolean execute = statement.execute();
-        connection.close();
-        return execute;
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("insert into role(role) values (?)");
+            statement.setString(1, role.getRole());
+            return statement.execute();
+        }
     }
 
     @Override
@@ -40,33 +35,26 @@ public class RoleDao implements IRoleDao {
 
     @Override
     public boolean deleteRole(int id) throws SQLException {
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("delete from role where id = ?");
-        statement.setInt(1, id);
-        boolean execute = statement.execute();
-        connection.close();
-        return execute;
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("delete from role where id = ?");
+            statement.setInt(1, id);
+            return statement.execute();
+        }
     }
 
     @Override
     public Role getRoleById(int id) throws SQLException {
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("select * from role where id = ?");
-        statement.setInt(1, id);
-        ResultSet set = statement.executeQuery();
-        if (set.next()) {
-            return new Role(
-                    set.getInt(COLUMN_ID),
-                    set.getString(COLUMN_ROLE)
-            );
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("select * from role where id = ?");
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return getRoleFromBd(set);
+            }
+            return null;
         }
-
-        connection.close();
-        return null;
     }
 
     @Override
@@ -74,34 +62,36 @@ public class RoleDao implements IRoleDao {
         if (role == null) {
             return false;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("update role " +
-                "set role = ?" +
-                "where id = ?");
-        statement.setString(1, role.getRole());
-        statement.setInt(2, role.getId());
-
-        statement.executeUpdate();
-        connection.close();
-        return true;
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("update role " +
+                    "set role = ? where id = ?");
+            statement.setString(1, role.getRole());
+            statement.setInt(2, role.getId());
+            statement.executeUpdate();
+            return true;
+        }
     }
 
     @Override
     public List<Role> getRoles() throws SQLException {
         List<Role> roles = new ArrayList<>();
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = connection.prepareStatement("select * from role");
-        ResultSet set = statement.executeQuery();
-        while (set.next()) {
-            roles.add(new Role(
-                    set.getInt(COLUMN_ID),
-                    set.getString(COLUMN_ROLE)
-            ));
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("select * from role");
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                roles.add(getRoleFromBd(set));
+            }
+            return roles;
         }
-        connection.close();
-        return roles;
+    }
+
+    /**
+     * Get role from DB
+     */
+    private Role getRoleFromBd(ResultSet set) throws SQLException {
+        return new Role(
+                set.getInt(COLUMN_ID),
+                set.getString(COLUMN_ROLE));
     }
 }

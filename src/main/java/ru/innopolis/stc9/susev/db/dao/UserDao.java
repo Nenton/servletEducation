@@ -32,7 +32,8 @@ public class UserDao implements IUserDao {
         preparedStatement.setString(1, login);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
+            IRoleDao roleDao = new RoleDao();
+            Role role = roleDao.getRoleById(resultSet.getInt(COLUMN_ROLE));
             result = new User(resultSet.getInt(COLUMN_ID),
                     resultSet.getString(COLUMN_LOGIN),
                     resultSet.getString(COLUMN_PASSWORD),
@@ -52,7 +53,8 @@ public class UserDao implements IUserDao {
         preparedStatement.setInt(1, Integer.parseInt(id));
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
+            IRoleDao roleDao = new RoleDao();
+            Role role = roleDao.getRoleById(resultSet.getInt(COLUMN_ROLE));
             result = new User(resultSet.getInt(COLUMN_ID),
                     resultSet.getString(COLUMN_LOGIN),
                     resultSet.getString(COLUMN_PASSWORD),
@@ -157,7 +159,8 @@ public class UserDao implements IUserDao {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
+            IRoleDao roleDao = new RoleDao();
+            Role role = roleDao.getRoleById(resultSet.getInt(COLUMN_ROLE));
             result.add(new User(resultSet.getInt(COLUMN_ID),
                     resultSet.getString(COLUMN_LOGIN),
                     resultSet.getString(COLUMN_PASSWORD),
@@ -174,7 +177,8 @@ public class UserDao implements IUserDao {
         PreparedStatement preparedStatement = connection.prepareStatement("select * from users;");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Role role = new RoleDao().getRoleById(resultSet.getInt(COLUMN_ROLE));
+            IRoleDao roleDao = new RoleDao();
+            Role role = roleDao.getRoleById(resultSet.getInt(COLUMN_ROLE));
             result.add(new User(resultSet.getInt(COLUMN_ID),
                     resultSet.getString(COLUMN_LOGIN),
                     resultSet.getString(COLUMN_PASSWORD),

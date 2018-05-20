@@ -16,17 +16,9 @@ import java.util.List;
  * Dao class for Lesson entity
  */
 public class LessonDao implements ILessonDao {
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_SUBJECT = "subject";
-    private static final String COLUMN_TEACHER = "teacher";
-    private static final String COLUMN_STUDENT = "student";
-    private static final String COLUMN_MARK = "mark";
-    private static final String COLUMN_ATTENDANCE = "attendance";
+
     private ConnectionManager conManager = ConnectionManagerJDBCImpl.getInstance();
 
-    /**
-     * Insert lesson into DB
-     */
     @Override
     public boolean addLesson(Lesson lesson) throws SQLException {
         if (lesson == null) {
@@ -41,9 +33,6 @@ public class LessonDao implements ILessonDao {
         }
     }
 
-    /**
-     * Delete lesson from DB
-     */
     @Override
     public boolean deleteLesson(Lesson lesson) throws SQLException {
         if (lesson == null) {
@@ -52,9 +41,6 @@ public class LessonDao implements ILessonDao {
         return deleteLessonById(lesson.getId());
     }
 
-    /**
-     * Get lesson from DB by lesson id
-     */
     @Override
     public Lesson getLessonById(int id) throws SQLException {
         try (Connection connection = conManager.getConnection()) {
@@ -69,9 +55,6 @@ public class LessonDao implements ILessonDao {
         }
     }
 
-    /**
-     * Update lesson from DB
-     */
     @Override
     public boolean updateLesson(Lesson lesson) throws SQLException {
         if (lesson == null) {
@@ -89,27 +72,22 @@ public class LessonDao implements ILessonDao {
         }
     }
 
-    /**
-     * Get lessons from DB by subjectId
-     */
     @Nullable
-    public List<Lesson> getLessonsBySubject(int idSubject) throws SQLException {
-        if (idSubject == 0) {
+    public List<Lesson> getLessonsBySubject(int id, int count) throws SQLException {
+        if (id == 0) {
             return null;
         }
         try (Connection connection = conManager.getConnection()) {
             PreparedStatement statement = null;
             statement = connection.prepareStatement("select lesson.* from lesson\n" +
                     "where lesson.subject = ? order by lesson.id desc limit ?");
-            statement.setInt(1, idSubject);
+            statement.setInt(1, id);
+            statement.setInt(2, count);
             ResultSet resultSet = statement.executeQuery();
             return parseResultSet(resultSet);
         }
     }
 
-    /**
-     * Delete lesson from DB by lesson id
-     */
     @Override
     public boolean deleteLessonById(int idLesson) throws SQLException {
         try (Connection connection = conManager.getConnection()) {
@@ -120,10 +98,6 @@ public class LessonDao implements ILessonDao {
         }
     }
 
-    /**
-     * Get lessons from DB by teacher id
-     * * @param count Count lessons in array
-     */
     @Nullable
     public List<Lesson> getLessonsByTeacher(int id, int count) throws SQLException {
         if (id == 0 || count == 0) {
@@ -140,10 +114,6 @@ public class LessonDao implements ILessonDao {
         }
     }
 
-    /**
-     * Get lessons from DB by student id
-     * * @param count Count lessons in array
-     */
     @Nullable
     public List<Lesson> getLessonsByStudent(int id, int count) throws SQLException {
         if (id == 0 || count == 0) {
@@ -160,10 +130,6 @@ public class LessonDao implements ILessonDao {
         }
     }
 
-    /**
-     * Get last lesson from DB
-     * @param count Count lessons in array
-     */
     @Override
     public List<Lesson> getLessons(int count) throws SQLException {
         if (count == 0) {
