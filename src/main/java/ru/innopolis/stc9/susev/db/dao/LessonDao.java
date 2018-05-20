@@ -157,10 +157,11 @@ public class LessonDao implements ILessonDao {
             int mark = resultSet.getInt(COLUMN_MARK);
             boolean attendance = resultSet.getBoolean(COLUMN_ATTENDANCE);
 
-            UserDao userDao = new UserDao();
+            IUserDao userDao = new UserDao();
+            ISubjectDao subjectDao = new SubjectDao();
             User student = userDao.getUserById(String.valueOf(idStudent));
             User teacher = userDao.getUserById(String.valueOf(idTeacher));
-            Subject subject = new SubjectDao().getSubjectById(idSubject);
+            Subject subject = subjectDao.getSubjectById(idSubject);
 
             lessons.add(new Lesson(idLesson,
                     subject, subject.getId(),

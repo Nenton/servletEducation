@@ -64,8 +64,7 @@ public class RoleDao implements IRoleDao {
         }
         try (Connection connection = conManager.getConnection()) {
             PreparedStatement statement = null;
-            statement = connection.prepareStatement("update role " +
-                    "set role = ? where id = ?");
+            statement = connection.prepareStatement("update role set role = ? where id = ?");
             statement.setString(1, role.getRole());
             statement.setInt(2, role.getId());
             statement.executeUpdate();

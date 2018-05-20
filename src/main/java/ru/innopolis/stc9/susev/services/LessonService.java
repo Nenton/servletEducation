@@ -1,9 +1,6 @@
 package ru.innopolis.stc9.susev.services;
 
-import ru.innopolis.stc9.susev.db.dao.ILessonDao;
-import ru.innopolis.stc9.susev.db.dao.LessonDao;
-import ru.innopolis.stc9.susev.db.dao.SubjectDao;
-import ru.innopolis.stc9.susev.db.dao.UserDao;
+import ru.innopolis.stc9.susev.db.dao.*;
 import ru.innopolis.stc9.susev.pojo.Lesson;
 import ru.innopolis.stc9.susev.pojo.Subject;
 import ru.innopolis.stc9.susev.pojo.User;
@@ -13,7 +10,7 @@ import java.util.List;
 
 public class LessonService {
     private ILessonDao lessonDao = new LessonDao();
-    private SubjectDao subjectDao = new SubjectDao();
+    private ISubjectDao subjectDao = new SubjectDao();
     private UserDao userDao = new UserDao();
 
     public User getUserByLogin(String login) {
