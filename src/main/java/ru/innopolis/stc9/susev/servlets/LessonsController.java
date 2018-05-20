@@ -29,6 +29,11 @@ public class LessonsController extends AbstractController {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("doGet" + this.getClass().getName());
         String login = ((String) req.getSession().getAttribute("login"));
+        setFields(req, login);
+        req.getRequestDispatcher("/pages/lessons.jsp").forward(req, resp);
+    }
+
+    private void setFields(HttpServletRequest req, String login) {
         List<Lesson> lessons = null;
         if (login != null && !login.isEmpty()) {
             User userByLogin = service.getUserByLogin(login);
@@ -53,13 +58,11 @@ public class LessonsController extends AbstractController {
         List<User> teachers = service.getTeachers();
         List<User> students = service.getStudents();
         List<Subject> subjects = service.getSubjects();
-// TODO: 20.05.2018 mapping
         req.setAttribute("marks", marks);
         req.setAttribute("subjects", subjects);
         req.setAttribute("students", students);
         req.setAttribute("teachers", teachers);
         req.setAttribute("lessons", lessons);
-        req.getRequestDispatcher("/pages/lessons.jsp").forward(req, resp);
     }
 
     @Override
@@ -69,30 +72,39 @@ public class LessonsController extends AbstractController {
         resp.setCharacterEncoding("UTF-8");
         try {
             if (req.getParameter("deleteBtn") != null) {
-                int idLesson = Integer.parseInt(req.getParameter("lessonId"));
-                service.deleteLessonById(idLesson);
+                deleteLesson(req);
                 doGet(req, resp);
             }
             if (req.getParameter("createLesson") != null) {
-                Lesson lesson = null;
-                int subject = Integer.parseInt(req.getParameter("subject"));
-                int student = Integer.parseInt(req.getParameter("student"));
-                int mark = Integer.parseInt(req.getParameter("mark"));
-                String[] selected = req.getParameterValues("attendance");
-                if (req.getParameter("teacher") == null) {
-                    String login = (String) req.getSession().getAttribute("login");
-                    User userByLogin = service.getUserByLogin(login);
-                    lesson = new Lesson(subject, student, userByLogin.getId(), mark, selected != null && selected.length != 0);
-                } else {
-                    int teacher = Integer.parseInt(req.getParameter("teacher"));
-                    lesson = new Lesson(subject, student, teacher, mark, selected != null && selected.length != 0);
-                }
-                service.createLesson(lesson);
+                createLesson(req);
                 doGet(req, resp);
             }
 
         } catch (Exception e) {
             logger.warn(e);
         }
+    }
+
+    private void createLesson(HttpServletRequest req) {
+        Lesson lesson = null;
+        int subject = Integer.parseInt(req.getParameter("subject"));
+        int student = Integer.parseInt(req.getParameter("student"));
+        int mark = Integer.parseInt(req.getParameter("mark"));
+        String[] selected = req.getParameterValues("attendance");
+        if (req.getParameter("teacher") == null) {
+            String login = (String) req.getSession().getAttribute("login");
+            User userByLogin = service.getUserByLogin(login);
+            lesson = new Lesson(subject, student, userByLogin.getId(), mark, selected != null && selected.length != 0);
+        } else {
+            int teacher = Integer.parseInt(req.getParameter("teacher"));
+            lesson = new Lesson(subject, student, teacher, mark, selected != null && selected.length != 0);
+        }
+        service.createLesson(lesson);
+    }
+
+    private void deleteLesson(HttpServletRequest req) {
+        int idLesson = Integer.parseInt(req.getParameter("lessonId"));
+        service.deleteLessonById(idLesson);
+
     }
 }

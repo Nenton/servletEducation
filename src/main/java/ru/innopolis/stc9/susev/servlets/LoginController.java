@@ -27,7 +27,7 @@ public class LoginController extends AbstractController {
         resp.setCharacterEncoding("UTF-8");
         String errorMsg = req.getParameter("errorMsg");
         if (errorMsg != null && errorMsg.equals("noAccess")) {
-// TODO: 20.05.2018 Сообщение показать
+            req.setAttribute("message", "У Вас нет доступа к этой странице.");
         }
 
         if (errorMsg != null && errorMsg.equals("authErr")) {
