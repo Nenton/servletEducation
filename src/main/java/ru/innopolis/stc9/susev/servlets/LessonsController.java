@@ -22,11 +22,12 @@ import java.util.List;
  * Controller for show lessons for student or teacher
  */
 @WebServlet(urlPatterns = {"/lessons"})
-public class LessonsController extends HttpServlet {
+public class LessonsController extends AbstractController {
     private ILessonService service = new LessonService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doGet" + this.getClass().getName());
         String login = ((String) req.getSession().getAttribute("login"));
         List<Lesson> lessons = null;
         if (login != null && !login.isEmpty()) {
@@ -63,10 +64,9 @@ public class LessonsController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doPost" + this.getClass().getName());
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
-
-
         try {
             if (req.getParameter("deleteBtn") != null) {
                 int idLesson = Integer.parseInt(req.getParameter("lessonId"));
@@ -92,10 +92,7 @@ public class LessonsController extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-            // TODO: 20.05.2018 Страница с ошибкой
+            logger.warn(e);
         }
-        // TODO: 19.05.2018 создание урока
     }
 }

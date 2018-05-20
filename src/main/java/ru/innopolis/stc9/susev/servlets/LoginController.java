@@ -16,17 +16,18 @@ import java.io.IOException;
  * Controller for login operations
  */
 @WebServlet("/login")
-public class LoginController extends HttpServlet {
+public class LoginController extends AbstractController {
 
     private IAuthService authService = new AuthService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doGet" + this.getClass().getName());
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String errorMsg = req.getParameter("errorMsg");
         if (errorMsg != null && errorMsg.equals("noAccess")) {
-
+// TODO: 20.05.2018 Сообщение показать
         }
 
         if (errorMsg != null && errorMsg.equals("authErr")) {
@@ -37,6 +38,7 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doPost" + this.getClass().getName());
         String action = req.getParameter("exit");
         if (action != null) {
             req.getSession().invalidate();

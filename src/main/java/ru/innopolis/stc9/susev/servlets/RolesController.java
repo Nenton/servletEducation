@@ -17,11 +17,12 @@ import java.util.List;
  * Controller for show roles
  */
 @WebServlet("/roles")
-public class RolesController extends HttpServlet {
+public class RolesController extends AbstractController {
     private IRoleService service = new RoleService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doGet" + this.getClass().getName());
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         List<Role> roles = service.getRoles();
@@ -31,6 +32,7 @@ public class RolesController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doPost" + this.getClass().getName());
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
@@ -50,8 +52,7 @@ public class RolesController extends HttpServlet {
             }
 
         } catch (Exception e) {
-            // TODO: 20.05.2018 Страница с ошибкой
+            logger.warn(e);
         }
-        // TODO: 19.05.2018 создание урока
     }
 }

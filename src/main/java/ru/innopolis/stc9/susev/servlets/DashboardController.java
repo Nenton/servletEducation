@@ -18,11 +18,12 @@ import java.util.List;
  * Controller for all need compressed information for user
  */
 @WebServlet(urlPatterns = {"/dashboard"})
-public class DashboardController extends HttpServlet {
+public class DashboardController extends AbstractController {
     private ILessonService service = new LessonService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doGet" + this.getClass().getName());
         String login = ((String) req.getSession().getAttribute("login"));
         List<Lesson> lessons = null;
         if (login != null && !login.isEmpty()) {
@@ -44,14 +45,7 @@ public class DashboardController extends HttpServlet {
         }
         if (lessons != null) {
             req.setAttribute("lessons", lessons);
-            req.getRequestDispatcher("/pages/dashboard.jsp").forward(req, resp);
-        } else {
-            // TODO: 17.05.2018 404
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        req.getRequestDispatcher("/pages/dashboard.jsp").forward(req, resp);
     }
 }

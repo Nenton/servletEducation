@@ -11,9 +11,10 @@ import java.io.IOException;
  * Controller for home page
  */
 @WebServlet("/")
-public class HomeController extends HttpServlet {
+public class HomeController extends AbstractController {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doGet" + this.getClass().getName());
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/pages/index.jsp").forward(req, resp);

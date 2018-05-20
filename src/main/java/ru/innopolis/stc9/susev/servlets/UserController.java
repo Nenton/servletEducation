@@ -15,11 +15,12 @@ import java.io.IOException;
  * Class NOT REALIZED. For current user
  */
 @WebServlet("/users/*")
-public class UserController extends HttpServlet {
+public class UserController extends AbstractController {
     private IUsersService service = new UsersService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("doGet" + this.getClass().getName());
         resp.getWriter().println("any");
         try {
             int idUser = Integer.parseInt(req.getPathInfo().substring(1));
@@ -27,7 +28,7 @@ public class UserController extends HttpServlet {
             req.setAttribute("user", userById);
             req.getRequestDispatcher("../pages/user.jsp");
         } catch (NumberFormatException e) {
-
+            logger.warn(e);
         }
     }
 }
