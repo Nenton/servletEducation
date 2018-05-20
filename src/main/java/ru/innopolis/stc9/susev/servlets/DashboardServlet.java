@@ -2,6 +2,7 @@ package ru.innopolis.stc9.susev.servlets;
 
 import ru.innopolis.stc9.susev.pojo.Lesson;
 import ru.innopolis.stc9.susev.pojo.User;
+import ru.innopolis.stc9.susev.services.ILessonService;
 import ru.innopolis.stc9.susev.services.LessonService;
 import ru.innopolis.stc9.susev.utils.ConstManager;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/dashboard"})
 public class DashboardServlet extends HttpServlet {
-    private LessonService service = new LessonService();
+    private ILessonService service = new LessonService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

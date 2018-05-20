@@ -4,6 +4,7 @@ import ru.innopolis.stc9.susev.pojo.Lesson;
 import ru.innopolis.stc9.susev.pojo.Subject;
 import ru.innopolis.stc9.susev.pojo.User;
 import ru.innopolis.stc9.susev.services.AuthService;
+import ru.innopolis.stc9.susev.services.ILessonService;
 import ru.innopolis.stc9.susev.services.LessonService;
 import ru.innopolis.stc9.susev.services.UsersService;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/lessons"})
 public class LessonsServlet extends HttpServlet {
-    private LessonService service = new LessonService();
+    private ILessonService service = new LessonService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

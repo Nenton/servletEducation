@@ -2,6 +2,7 @@ package ru.innopolis.stc9.susev.servlets;
 
 
 import ru.innopolis.stc9.susev.pojo.Role;
+import ru.innopolis.stc9.susev.services.IRoleService;
 import ru.innopolis.stc9.susev.services.RoleService;
 
 import javax.servlet.ServletException;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @WebServlet("/roles")
 public class RolesServlet extends HttpServlet {
-    private RoleService service = new RoleService();
+    private IRoleService service = new RoleService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
