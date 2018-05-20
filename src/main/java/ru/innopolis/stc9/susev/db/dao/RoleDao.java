@@ -85,6 +85,24 @@ public class RoleDao implements IRoleDao {
         }
     }
 
+
+    @Override
+    public Role getRoleByLogin(String login) throws SQLException {
+        if (login == null || login.isEmpty()) {
+            return null;
+        }
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("select role.* from role\n" +
+                    "  inner join users u on u.role = role.id where u.login = ?");
+            statement.setString(1, login);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return getRoleFromBd(set);
+            }
+            return null;
+        }
+    }
+
     /**
      * Get role from DB
      */

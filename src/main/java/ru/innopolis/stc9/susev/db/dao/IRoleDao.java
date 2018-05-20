@@ -41,4 +41,8 @@ public interface IRoleDao {
      */
     List<Role> getRoles() throws SQLException;
 
+    /**
+     * Get role from DB by user login
+     */
+    Role getRoleByLogin(String login) throws SQLException;
 }

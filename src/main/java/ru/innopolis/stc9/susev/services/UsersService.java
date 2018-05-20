@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersService {
-    private UserDao userDao = new UserDao();
+    private IUserDao userDao = new UserDao();
     private IRoleDao roleDao = new RoleDao();
 
     @Nullable
-    public User getUserById(String id) {
+    public User getUserById(int id) {
         User user = null;
         try {
             user = userDao.getUserById(id);

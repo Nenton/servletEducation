@@ -159,8 +159,8 @@ public class LessonDao implements ILessonDao {
 
             IUserDao userDao = new UserDao();
             ISubjectDao subjectDao = new SubjectDao();
-            User student = userDao.getUserById(String.valueOf(idStudent));
-            User teacher = userDao.getUserById(String.valueOf(idTeacher));
+            User student = userDao.getUserById(idStudent);
+            User teacher = userDao.getUserById(idTeacher);
             Subject subject = subjectDao.getSubjectById(idSubject);
 
             lessons.add(new Lesson(idLesson,

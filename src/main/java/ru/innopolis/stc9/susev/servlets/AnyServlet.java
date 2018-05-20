@@ -19,7 +19,7 @@ public class AnyServlet extends HttpServlet {
         resp.getWriter().println("any");
         try {
             int idUser = Integer.parseInt(req.getPathInfo().substring(1));
-            User userById = service.getUserById(String.valueOf(idUser));
+            User userById = service.getUserById(idUser);
             req.setAttribute("user", userById);
             req.getRequestDispatcher("../pages/user.jsp");
         } catch (NumberFormatException e) {

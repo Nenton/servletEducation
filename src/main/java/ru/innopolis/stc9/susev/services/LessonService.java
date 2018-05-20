@@ -11,7 +11,7 @@ import java.util.List;
 public class LessonService {
     private ILessonDao lessonDao = new LessonDao();
     private ISubjectDao subjectDao = new SubjectDao();
-    private UserDao userDao = new UserDao();
+    private IUserDao userDao = new UserDao();
 
     public User getUserByLogin(String login) {
         try {
