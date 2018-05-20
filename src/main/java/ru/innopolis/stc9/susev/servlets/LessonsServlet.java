@@ -20,15 +20,13 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/lessons"})
 public class LessonsServlet extends HttpServlet {
     private LessonService service = new LessonService();
-    private UsersService userServlet = new UsersService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        Role role = ((Role) req.getSession().getAttribute("role"));
         String login = ((String) req.getSession().getAttribute("login"));
         List<Lesson> lessons = null;
         if (login != null && !login.isEmpty()) {
-            User userByLogin = userServlet.getUserByLogin(login);
+            User userByLogin = service.getUserByLogin(login);
             switch (userByLogin.getRole().getId()) {
                 case 1:
                     lessons = service.getLessonsLast(100);

@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Connection for PostgreSQL
+ */
 public class ConnectionManagerJDBCImpl implements ConnectionManager {
 
     private static ConnectionManager connectionManager;

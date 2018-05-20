@@ -12,151 +12,175 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Dao class for Lesson entity
+ */
 public class LessonDao implements ILessonDao {
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_SUBJECT = "subject";
-    public static final String COLUMN_TEACHER = "teacher";
-    public static final String COLUMN_STUDENT = "student";
-    public static final String COLUMN_MARK = "mark";
-    public static final String COLUMN_ATTENDANCE = "attendance";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_SUBJECT = "subject";
+    private static final String COLUMN_TEACHER = "teacher";
+    private static final String COLUMN_STUDENT = "student";
+    private static final String COLUMN_MARK = "mark";
+    private static final String COLUMN_ATTENDANCE = "attendance";
     private ConnectionManager conManager = ConnectionManagerJDBCImpl.getInstance();
 
+    /**
+     * Insert lesson into DB
+     */
     @Override
     public boolean addLesson(Lesson lesson) throws SQLException {
         if (lesson == null) {
             return false;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("insert into lesson(subject, student, teacher, mark, attendance)" +
-                " values (?, ?, ?, ?, ?)");
-        statement.setInt(1, lesson.getSubjectId());
-        statement.setInt(2, lesson.getStudentId());
-        statement.setInt(3, lesson.getTeacherId());
-        statement.setInt(4, lesson.getMark());
-        statement.setBoolean(5, lesson.isAttendance());
-
-        boolean execute = statement.execute();
-        connection.close();
-        return execute;
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("insert into lesson(subject, student, teacher, mark, attendance)" +
+                    " values (?, ?, ?, ?, ?)");
+            setParamsIntoStatement(statement, lesson);
+            return statement.execute();
+        }
     }
 
+    /**
+     * Delete lesson from DB
+     */
     @Override
     public boolean deleteLesson(Lesson lesson) throws SQLException {
+        if (lesson == null) {
+            return false;
+        }
         return deleteLessonById(lesson.getId());
     }
 
+    /**
+     * Get lesson from DB by lesson id
+     */
     @Override
     public Lesson getLessonById(int id) throws SQLException {
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("select * from lesson where id = ?");
-        statement.setInt(1, id);
-        ResultSet set = statement.executeQuery();
-        if (set.next()) {
-            return new Lesson(
-                    set.getInt(COLUMN_ID),
-                    set.getInt(COLUMN_SUBJECT),
-                    set.getInt(COLUMN_STUDENT),
-                    set.getInt(COLUMN_TEACHER),
-                    set.getInt(COLUMN_MARK),
-                    set.getBoolean(COLUMN_ATTENDANCE)
-            );
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("select * from lesson where id = ?");
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return getLessonFromDb(set);
+            }
+            return null;
         }
-
-        connection.close();
-        return null;
     }
 
+    /**
+     * Update lesson from DB
+     */
     @Override
     public boolean updateLesson(Lesson lesson) throws SQLException {
         if (lesson == null) {
             return false;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("update lesson " +
-                "set subject = ?, student = ?, teacher = ?, mark = ?, attendance = ? " +
-                "where id = ?");
-        statement.setInt(1, lesson.getSubjectId());
-        statement.setInt(2, lesson.getStudentId());
-        statement.setInt(3, lesson.getTeacherId());
-        statement.setInt(4, lesson.getMark());
-        statement.setBoolean(5, lesson.isAttendance());
-        statement.setInt(6, lesson.getId());
-
-        statement.executeUpdate();
-        connection.close();
-        return true;
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("update lesson " +
+                    "set subject = ?, student = ?, teacher = ?, mark = ?, attendance = ? " +
+                    "where id = ?");
+            setParamsIntoStatement(statement, lesson);
+            statement.setInt(6, lesson.getId());
+            statement.executeUpdate();
+            return true;
+        }
     }
 
+    /**
+     * Get lessons from DB by subjectId
+     */
     @Nullable
-    public List<Lesson> getLessonsBySubject(int id) throws SQLException {
-        if (id == 0) {
+    public List<Lesson> getLessonsBySubject(int idSubject) throws SQLException {
+        if (idSubject == 0) {
             return null;
         }
-        List<Lesson> lessons = new ArrayList<>();
-        return lessons;
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("select lesson.* from lesson\n" +
+                    "where lesson.subject = ? order by lesson.id desc limit ?");
+            statement.setInt(1, idSubject);
+            ResultSet resultSet = statement.executeQuery();
+            return parseResultSet(resultSet);
+        }
     }
 
+    /**
+     * Delete lesson from DB by lesson id
+     */
+    @Override
+    public boolean deleteLessonById(int idLesson) throws SQLException {
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("delete from lesson where id = ?");
+            statement.setInt(1, idLesson);
+            return statement.execute();
+        }
+    }
+
+    /**
+     * Get lessons from DB by teacher id
+     * * @param count Count lessons in array
+     */
     @Nullable
     public List<Lesson> getLessonsByTeacher(int id, int count) throws SQLException {
-        if (id == 0) {
+        if (id == 0 || count == 0) {
             return null;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("select\n" +
-                "  lesson.*\n" +
-                "from lesson\n" +
-                "where lesson.teacher = ?\n" +
-                "order by lesson.id desc limit ?");
-        statement.setInt(1, id);
-        statement.setInt(2, count);
-
-        ResultSet resultSet = statement.executeQuery();
-        return parseResultSet(resultSet);
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("select lesson.* from lesson\n" +
+                    "where lesson.teacher = ? order by lesson.id desc limit ?");
+            statement.setInt(1, id);
+            statement.setInt(2, count);
+            ResultSet resultSet = statement.executeQuery();
+            return parseResultSet(resultSet);
+        }
     }
 
+    /**
+     * Get lessons from DB by student id
+     * * @param count Count lessons in array
+     */
     @Nullable
     public List<Lesson> getLessonsByStudent(int id, int count) throws SQLException {
-        if (id == 0) {
+        if (id == 0 || count == 0) {
             return null;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("select\n" +
-                "  lesson.*\n" +
-                "from lesson\n" +
-                "where lesson.student = ?\n" +
-                "order by lesson.id desc limit ?");
-        statement.setInt(1, id);
-        statement.setInt(2, count);
-
-        ResultSet resultSet = statement.executeQuery();
-        return parseResultSet(resultSet);
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("select lesson.*\n" +
+                    "from lesson where lesson.student = ? order by lesson.id desc limit ?");
+            statement.setInt(1, id);
+            statement.setInt(2, count);
+            ResultSet resultSet = statement.executeQuery();
+            return parseResultSet(resultSet);
+        }
     }
 
+    /**
+     * Get last lesson from DB
+     * @param count Count lessons in array
+     */
+    @Override
     public List<Lesson> getLessons(int count) throws SQLException {
         if (count == 0) {
             return null;
         }
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("select * from lesson order by lesson.id desc limit ?;");
-        statement.setInt(1, count);
-
-        ResultSet resultSet = statement.executeQuery();
-        connection.close();
-        return parseResultSet(resultSet);
+        try (Connection connection = conManager.getConnection()) {
+            PreparedStatement statement = null;
+            statement = connection.prepareStatement("select * from lesson order by lesson.id desc limit ?;");
+            statement.setInt(1, count);
+            ResultSet resultSet = statement.executeQuery();
+            return parseResultSet(resultSet);
+        }
     }
 
+    /**
+     * Parse results from ResultSer into List
+     */
     private List<Lesson> parseResultSet(ResultSet resultSet) throws SQLException {
         List<Lesson> lessons = new ArrayList<>();
         while (resultSet.next()) {
@@ -182,14 +206,28 @@ public class LessonDao implements ILessonDao {
         return lessons;
     }
 
-    public boolean deleteLessonById(int idLesson) throws SQLException {
-        Connection connection;
-        connection = conManager.getConnection();
-        PreparedStatement statement = null;
-        statement = connection.prepareStatement("delete from lesson where id = ?");
-        statement.setInt(1, idLesson);
-        boolean execute = statement.execute();
-        connection.close();
-        return execute;
+    /**
+     * Mapping statement from lesson entity
+     */
+    private void setParamsIntoStatement(PreparedStatement statement, Lesson lesson) throws SQLException {
+        statement.setInt(1, lesson.getSubjectId());
+        statement.setInt(2, lesson.getStudentId());
+        statement.setInt(3, lesson.getTeacherId());
+        statement.setInt(4, lesson.getMark());
+        statement.setBoolean(5, lesson.isAttendance());
+    }
+
+    /**
+     * Parse results from ResultSet into Lesson
+     */
+    private Lesson getLessonFromDb(ResultSet set) throws SQLException {
+        return new Lesson(
+                set.getInt(COLUMN_ID),
+                set.getInt(COLUMN_SUBJECT),
+                set.getInt(COLUMN_STUDENT),
+                set.getInt(COLUMN_TEACHER),
+                set.getInt(COLUMN_MARK),
+                set.getBoolean(COLUMN_ATTENDANCE)
+        );
     }
 }
