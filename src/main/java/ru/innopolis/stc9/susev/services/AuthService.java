@@ -16,6 +16,9 @@ public class AuthService implements IAuthService {
 
     @Override
     public boolean checkAuth(String login, String password) {
+        if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
+            return false;
+        }
         User user = null;
         try {
             user = userDao.getUserByLogin(login);
@@ -28,6 +31,9 @@ public class AuthService implements IAuthService {
     @Override
     @Nullable
     public Role getRoleByUserLogin(String login) {
+        if (login == null || login.isEmpty()) {
+            return null;
+        }
         Role role = null;
         try {
             role = roleDao.getRoleByLogin(login);

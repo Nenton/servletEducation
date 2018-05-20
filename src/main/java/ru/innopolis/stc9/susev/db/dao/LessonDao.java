@@ -1,5 +1,6 @@
 package ru.innopolis.stc9.susev.db.dao;
 
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import ru.innopolis.stc9.susev.db.connection.ConnectionManager;
 import ru.innopolis.stc9.susev.db.connection.ConnectionManagerJDBCImpl;
@@ -43,6 +44,9 @@ public class LessonDao implements ILessonDao {
 
     @Override
     public Lesson getLessonById(int id) throws SQLException {
+        if (id == 0) {
+            return null;
+        }
         try (Connection connection = conManager.getConnection()) {
             PreparedStatement statement = null;
             statement = connection.prepareStatement("select * from lesson where id = ?");
@@ -147,7 +151,7 @@ public class LessonDao implements ILessonDao {
     /**
      * Parse results from ResultSer into List
      */
-    private List<Lesson> parseResultSet(ResultSet resultSet) throws SQLException {
+    private List<Lesson> parseResultSet(@NotNull ResultSet resultSet) throws SQLException {
         List<Lesson> lessons = new ArrayList<>();
         while (resultSet.next()) {
             int idLesson = resultSet.getInt(COLUMN_ID);
@@ -176,7 +180,10 @@ public class LessonDao implements ILessonDao {
     /**
      * Mapping statement from lesson entity
      */
-    private void setParamsIntoStatement(PreparedStatement statement, Lesson lesson) throws SQLException {
+    private void setParamsIntoStatement(@NotNull PreparedStatement statement, @NotNull Lesson lesson) throws SQLException {
+        if (statement == null || lesson == null) {
+            return;
+        }
         statement.setInt(1, lesson.getSubjectId());
         statement.setInt(2, lesson.getStudentId());
         statement.setInt(3, lesson.getTeacherId());
@@ -187,7 +194,7 @@ public class LessonDao implements ILessonDao {
     /**
      * Parse results from ResultSet into Lesson
      */
-    private Lesson getLessonFromDb(ResultSet set) throws SQLException {
+    private Lesson getLessonFromDb(@NotNull ResultSet set) throws SQLException {
         return new Lesson(
                 set.getInt(COLUMN_ID),
                 set.getInt(COLUMN_SUBJECT),
