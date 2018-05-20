@@ -2,6 +2,7 @@ package ru.innopolis.stc9.susev.servlets;
 
 import ru.innopolis.stc9.susev.pojo.Role;
 import ru.innopolis.stc9.susev.services.AuthService;
+import ru.innopolis.stc9.susev.services.IAuthService;
 import ru.innopolis.stc9.susev.utils.ConstManager;
 
 import javax.servlet.ServletException;
@@ -10,12 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
 
-    private AuthService authService = new AuthService();
+    private IAuthService authService = new AuthService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +42,7 @@ public class LoginController extends HttpServlet {
             String login = req.getParameter("userName");
             String password = req.getParameter("userPassword");
             if (authService.checkAuth(login, password)) {
-                Role role = authService.getRole(login);
+                Role role = authService.getRoleByUserLogin(login);
                 req.getSession().setAttribute("role", role);
                 req.getSession().setAttribute("login", login);
 
