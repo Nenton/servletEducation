@@ -1,4 +1,4 @@
-package ru.innopolis.stc9.susev.servlets.filters;
+package ru.innopolis.stc9.susev.controllers.filters;
 
 import ru.innopolis.stc9.susev.pojo.Role;
 

@@ -1,4 +1,4 @@
-package ru.innopolis.stc9.susev.servlets;
+package ru.innopolis.stc9.susev.controllers;
 
 import ru.innopolis.stc9.susev.pojo.Lesson;
 import ru.innopolis.stc9.susev.pojo.User;
@@ -8,7 +8,6 @@ import ru.innopolis.stc9.susev.utils.ConstManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

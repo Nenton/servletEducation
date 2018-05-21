@@ -1,4 +1,4 @@
-package ru.innopolis.stc9.susev.servlets.filters;
+package ru.innopolis.stc9.susev.controllers.filters;
 
 import ru.innopolis.stc9.susev.pojo.Role;
 
@@ -19,7 +19,7 @@ public class AdminFilter extends AuthFilter {
         HttpSession httpSession = ((HttpServletRequest) request).getSession();
         Role role = (Role) httpSession.getAttribute("role");
         Object login = httpSession.getAttribute("login");
-        if (login != null && role != null && role.getRole().equals("admin")) {
+        if (login != null && !((String) login).isEmpty() && role != null && role.getRole().equals("admin")) {
             chain.doFilter(request, response);
         } else {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;

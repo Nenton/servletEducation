@@ -1,4 +1,4 @@
-package ru.innopolis.stc9.susev.servlets;
+package ru.innopolis.stc9.susev.controllers;
 
 import org.apache.log4j.Logger;
 

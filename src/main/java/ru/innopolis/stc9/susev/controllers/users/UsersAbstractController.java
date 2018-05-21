@@ -1,10 +1,10 @@
-package ru.innopolis.stc9.susev.servlets.users;
+package ru.innopolis.stc9.susev.controllers.users;
 
 import ru.innopolis.stc9.susev.pojo.Role;
 import ru.innopolis.stc9.susev.pojo.User;
 import ru.innopolis.stc9.susev.services.IUsersService;
 import ru.innopolis.stc9.susev.services.UsersService;
-import ru.innopolis.stc9.susev.servlets.AbstractController;
+import ru.innopolis.stc9.susev.controllers.AbstractController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

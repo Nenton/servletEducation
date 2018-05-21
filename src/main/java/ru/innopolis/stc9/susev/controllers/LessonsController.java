@@ -1,21 +1,17 @@
-package ru.innopolis.stc9.susev.servlets;
+package ru.innopolis.stc9.susev.controllers;
 
 import ru.innopolis.stc9.susev.pojo.Lesson;
 import ru.innopolis.stc9.susev.pojo.Subject;
 import ru.innopolis.stc9.susev.pojo.User;
-import ru.innopolis.stc9.susev.services.AuthService;
 import ru.innopolis.stc9.susev.services.ILessonService;
 import ru.innopolis.stc9.susev.services.LessonService;
-import ru.innopolis.stc9.susev.services.UsersService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 /**

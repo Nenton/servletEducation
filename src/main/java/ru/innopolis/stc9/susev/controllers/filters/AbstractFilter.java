@@ -1,4 +1,4 @@
-package ru.innopolis.stc9.susev.servlets.filters;
+package ru.innopolis.stc9.susev.controllers.filters;
 
 import org.apache.log4j.Logger;
 

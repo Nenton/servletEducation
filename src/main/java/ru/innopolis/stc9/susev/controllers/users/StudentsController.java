@@ -1,4 +1,4 @@
-package ru.innopolis.stc9.susev.servlets.users;
+package ru.innopolis.stc9.susev.controllers.users;
 
 import javax.servlet.annotation.WebServlet;
 
