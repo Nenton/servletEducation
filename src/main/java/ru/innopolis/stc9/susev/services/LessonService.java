@@ -142,4 +142,16 @@ public class LessonService implements ILessonService {
         }
         return false;
     }
+
+    public void setLessonDao(ILessonDao lessonDao) {
+        this.lessonDao = lessonDao;
+    }
+
+    public void setSubjectDao(ISubjectDao subjectDao) {
+        this.subjectDao = subjectDao;
+    }
+
+    public void setUserDao(IUserDao userDao) {
+        this.userDao = userDao;
+    }
 }
